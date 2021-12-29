@@ -1,31 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {Card, Container} from "react-bootstrap";
-import {gotMessages} from "../utils";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export function Messages() {
-    const [messages, setMessages] = useState([])
-
-    useEffect(async () => {
-        let arr = await gotMessages()
-        setMessages(arr)
-    }, [])
-
-
+export default function Messages({ messages }) {
     return (
-        <Container>
+        <>
             <h2>Messages</h2>
-            {Array.from(messages).map((message) =>{
-                console.log(message)
-                return <Card key={message.objectId} className="mb-2">
-                    <Card.Header>USER: {message.account_id}</Card.Header>
-                    <Card.Body>
-                        <Card.Text>{message.message}</Card.Text>
-                        {/*<Card.Text>*/}
-                        {/*    With supporting text below as a natural lead-in to additional content.*/}
-                        {/*</Card.Text>*/}
-                    </Card.Body>
-                </Card>
-            })}
-        </Container>
+            {messages.map((message, i) =>
+                // TODO: format as cards, add timestamp
+                <p key={i} className={message.premium ? 'is-premium' : ''}>
+                    <strong>{message.sender}</strong>:<br/>
+                    {message.text}
+                </p>
+            )}
+        </>
     );
 }
+
+Messages.propTypes = {
+    messages: PropTypes.array
+};
