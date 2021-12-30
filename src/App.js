@@ -6,6 +6,7 @@ import Form from './components/Form';
 import SignIn from './components/SignIn';
 import Messages from './components/Messages';
 import Backendless from 'backendless';
+import {addAuthUser, addMessage} from "./utils";
 
 
 
@@ -33,9 +34,6 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
 
         fieldset.disabled = true;
 
-        // TODO: optimistically update page with new message,
-        // update blockchain data in background
-        // add uuid to each message, so we know which one is already known
         contract.addMessage(
             { text: message.value },
             BOATLOAD_OF_GAS,
@@ -49,6 +47,9 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
                 message.focus();
             });
         });
+        console.log(message.value);
+        console.log(donation.value);
+        addMessage(currentUser, message.value, donation.value);
     };
 
     const signIn = () => {
@@ -67,6 +68,9 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
 
     return (
         <main>
+            {
+                currentUser && addAuthUser(currentUser)
+            }
             <header>
                 <h1>NEAR Guest Book</h1>
                 { currentUser

@@ -1,6 +1,6 @@
 // import { connect, Contract, keyStores, WalletConnection } from 'near-api-js'
 // import {getConfig} from './config'
-// import Backendless from "backendless";
+import Backendless from "backendless";
 // import Big from "big.js";
 // import {useState} from "react";
 //
@@ -76,31 +76,31 @@
 //     // window.walletConnection.requestSignIn("", "NEAR REST API")
 // }
 //
-// export function addAuthUser(currentUser){
-//     Backendless.Data.of('authedUsers').save({ account_id: currentUser.accountId })
-//         .then(obj => {
-//             console.log(currentUser.accountId)
+export function addAuthUser(currentUser){
+    Backendless.Data.of('authedUsers').save({ account_id: currentUser.accountId })
+        .then(obj => {
+            console.log(currentUser.accountId)
+
+            console.log('A data object has been saved in Backendless. Check \'DB\' in Backendless Console.' +
+                `ObjectId = ${obj.objectId}`);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
 //
-//             console.log('A data object has been saved in Backendless. Check \'DB\' in Backendless Console.' +
-//                 `ObjectId = ${obj.objectId}`);
-//         })
-//         .catch(error => {
-//             console.log(error);
-//         })
-// }
-//
-// export function addMessage(currentUser, message, payload) {
-//     Backendless.Data.of('Messages').save({ account_id: currentUser.accountId , message: message, payload: payload})
-//         .then(obj => {
-//             console.log(currentUser.accountId)
-//
-//             console.log('A data object has been saved in Backendless. Check \'DB\' in Backendless Console.' +
-//                 `ObjectId = ${obj.objectId}`);
-//         })
-//         .catch(error => {
-//             console.log(error);
-//         })
-// }
+export function addMessage(currentUser, message, payload) {
+    Backendless.Data.of('Messages').save({ account_id: currentUser.accountId, message: message, payload: payload})
+        .then(obj => {
+            // console.log(currentUser.accountId)
+            //
+            // console.log('A data object has been saved in Backendless. Check \'DB\' in Backendless Console.' +
+            //     `ObjectId = ${obj.objectId}`);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
 //
 // export const gotMessages = async () => {
 //     try {
