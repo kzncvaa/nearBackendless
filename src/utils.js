@@ -101,6 +101,18 @@ export function addMessage(currentUser, message, payload) {
             console.log(error);
         })
 }
+export function addPrivateMessage(currentUser, message, payload, receiver) {
+    Backendless.Data.of('Messages').save({ account_id: currentUser.accountId, message: message, payload: payload, private: true, receiver: receiver})
+        .then(obj => {
+            // console.log(currentUser.accountId)
+            //
+            // console.log('A data object has been saved in Backendless. Check \'DB\' in Backendless Console.' +
+            //     `ObjectId = ${obj.objectId}`);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
 //
 export const gotMessages = async () => {
     try {
@@ -108,6 +120,7 @@ export const gotMessages = async () => {
         let queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause( whereClause );
 
         let messages = await Backendless.Data.of('Messages').find(queryBuilder)
+        // console.log(messages);
         return messages
     }catch (e) {
         return e
