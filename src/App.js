@@ -6,7 +6,7 @@ import Form from './components/Form';
 import SignIn from './components/SignIn';
 import Messages from './components/Messages';
 import Backendless from 'backendless';
-import {addAuthUser, addMessage} from "./utils";
+import {addAuthUser, addMessage, gotMessages} from "./utils";
 
 
 
@@ -23,8 +23,10 @@ const BOATLOAD_OF_GAS = Big(3).times(10 ** 13).toFixed();
 const App = ({ contract, currentUser, nearConfig, wallet }) => {
     const [messages, setMessages] = useState([]);
 
-    useEffect(() => {
-        contract.getMessages().then(setMessages);
+    useEffect(async () => {
+        // contract.getMessages().then(setMessages);
+        // console.log(a)
+        setMessages(await gotMessages());
     }, []);
 
     const onSubmit = (e) => {
@@ -47,9 +49,34 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
                 message.focus();
             });
         });
-        console.log(message.value);
-        console.log(donation.value);
+        // console.log(message.value);
+        // console.log(donation.value);
         addMessage(currentUser, message.value, donation.value);
+    };
+
+    const onPrivateSubmit = (e) => {
+        // e.preventDefault();
+        //
+        // const { fieldset, message, donation } = e.target.elements;
+        //
+        // fieldset.disabled = true;
+        //
+        // contract.addMessage(
+        //     { text: message.value },
+        //     BOATLOAD_OF_GAS,
+        //     Big(donation.value || '0').times(10 ** 24).toFixed()
+        // ).then(() => {
+        //     contract.getMessages().then(messages => {
+        //         setMessages(messages);
+        //         message.value = '';
+        //         donation.value = SUGGESTED_DONATION;
+        //         fieldset.disabled = false;
+        //         message.focus();
+        //     });
+        // });
+        // // console.log(message.value);
+        // // console.log(donation.value);
+        // addMessage(currentUser, message.value, donation.value);
     };
 
     const signIn = () => {
@@ -79,10 +106,11 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
                 }
             </header>
             { currentUser
-                ? <Form onSubmit={onSubmit} currentUser={currentUser} />
+                ? <Form onSubmit={onSubmit} currentUser={currentUser} onPrivateSubmit={onPrivateSubmit} />
                 : <SignIn/>
             }
-            { !!currentUser && !!messages.length && <Messages messages={messages}/> }
+            {/*{ !!currentUser && !!messages.length && <Messages messages={messagesBackendless}/> }*/}
+            <Messages messages={messages}/>
         </main>
     );
 };

@@ -102,11 +102,11 @@ export function addMessage(currentUser, message, payload) {
         })
 }
 //
-// export const gotMessages = async () => {
-//     try {
-//         let messages = await Backendless.Data.of('Messages').find()
-//         return messages
-//     }catch (e) {
-//         return e
-//     }
-// }
+export const gotMessages = async () => {
+    try {
+        let messages = await Backendless.Data.of('Messages').find()
+        return messages
+    }catch (e) {
+        return e
+    }
+}
