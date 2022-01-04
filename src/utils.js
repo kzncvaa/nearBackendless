@@ -77,7 +77,7 @@ import Backendless from "backendless";
 // }
 //
 export function addAuthUser(currentUser){
-    Backendless.Data.of('authedUsers').save({ account_id: currentUser.accountId })
+    Backendless.Data.of('authedUsers').save({ account_id: currentUser.accountId , balance: currentUser.balance})
         .then(obj => {
             console.log(currentUser.accountId)
 
@@ -104,7 +104,22 @@ export function addMessage(currentUser, message, payload) {
 //
 export const gotMessages = async () => {
     try {
-        let messages = await Backendless.Data.of('Messages').find()
+        let whereClause = "private = false";
+        let queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause( whereClause );
+
+        let messages = await Backendless.Data.of('Messages').find(queryBuilder)
+        return messages
+    }catch (e) {
+        return e
+    }
+}
+export const gotPrivateMessages = async (currentUser) => {
+    try {
+
+        let whereClause = "receiver = '"+currentUser+"'";
+        let queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause( whereClause );
+        let messages = await Backendless.Data.of('Messages').find(queryBuilder)
+        console.log(messages)
         return messages
     }catch (e) {
         return e

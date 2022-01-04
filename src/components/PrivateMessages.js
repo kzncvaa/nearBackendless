@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function Messages({ messages }) {
+export default function PrivateMessages({ messages }) {
     return (
         <>
             <hr/>
-            <h2>Messages</h2>
+            <h2 style={{color: "red"}}>Private messages</h2>
             {messages.map((message) =>
-                <p key={message.objectId}>
-                    <strong>{message.account_id}</strong>:<br/>
+                <p key={message.objectId} style={{color: "red"}}>
+                    <strong>From: {message.account_id}</strong>:<br/>
                     {message.message} - {message.payload}
                 </p>
             )}
@@ -16,6 +16,6 @@ export default function Messages({ messages }) {
     );
 }
 
-Messages.propTypes = {
+PrivateMessages.propTypes = {
     messages: PropTypes.array
 };

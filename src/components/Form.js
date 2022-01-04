@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Big from 'big.js';
+import {Form, Button} from 'react-bootstrap'
 
-export default function Form({ onSubmit, currentUser, onPrivateSubmit }) {
+export default function MessageForm({ onSubmit, currentUser, onPrivateSubmit }) {
 
     const [x, setX] = useState(false);
 
@@ -12,61 +13,111 @@ export default function Form({ onSubmit, currentUser, onPrivateSubmit }) {
     };
 
     return (
-        <form onSubmit={x ? onPrivateSubmit : onSubmit}>
+        <Form onSubmit={x ? onPrivateSubmit : onSubmit}>
             <fieldset id="fieldset">
-                <p>Sign the guest book, { currentUser.accountId }!</p>
-                <p className="highlight">
-                    <label htmlFor="message">Message:</label>
-                    <input
-                        autoComplete="off"
-                        autoFocus
-                        id="message"
-                        required
+
+                <Form.Group className="mb-3" controlId="message">
+                    <Form.Label>Message</Form.Label>
+                    <Form.Control type="text"
+                                  placeholder="Enter message"
+                                  autoComplete="off"
+                                  autoFocus
+                                  // id="message"
+                                  required
                     />
-                </p>
-                <p>
-                    <label htmlFor="donation">Donation (optional):</label>
-                    <input
+                </Form.Group>
+
+                {/*<p className="highlight">*/}
+                {/*    <label htmlFor="message">Message:</label>*/}
+                {/*    <input*/}
+                {/*        autoComplete="off"*/}
+                {/*        autoFocus*/}
+                {/*        id="message"*/}
+                {/*        required*/}
+                {/*    />*/}
+                {/*</p>*/}
+
+                <Form.Group className="mb-3" controlId="donation">
+                    <Form.Label>Donation (optional)</Form.Label>
+                    <Form.Control
                         autoComplete="off"
                         defaultValue={'0'}
-                        id="donation"
+                        // id="donation"
                         max={Big(currentUser.balance).div(10 ** 24)}
                         min="0"
                         step="0.01"
                         type="number"
                     />
-                    <span title="NEAR Tokens">Ⓝ</span>
-                </p>
-                <p>
-                <label htmlFor="checkbox">Set true if you want to make private message</label>
-                    <input type="checkbox" id="checkbox" checked={x} onChange={soldCheckbox} />
-                    <span title="NEAR Tokens">Ⓝ</span>
-            </p>
-                <p>
-                    <label htmlFor="receiver">Receiver (optional):</label>
-                    <input
+                </Form.Group>
+
+                {/*<p>*/}
+                {/*    <label htmlFor="donation">Donation (optional):</label>*/}
+                {/*    <input*/}
+                {/*        autoComplete="off"*/}
+                {/*        defaultValue={'0'}*/}
+                {/*        id="donation"*/}
+                {/*        max={Big(currentUser.balance).div(10 ** 24)}*/}
+                {/*        min="0"*/}
+                {/*        step="0.01"*/}
+                {/*        type="number"*/}
+                {/*    />*/}
+                {/*    <span title="NEAR Tokens">Ⓝ</span>*/}
+                {/*</p>*/}
+
+                <Form.Group className="mb-3" controlId="checkbox">
+                    {/*<Form.Label>Set true if you want to make private message</Form.Label>*/}
+
+                    <Form.Check
+                        checked={x}
+                        onChange={soldCheckbox}
+                        // id="checkbox"
+                        // type={checkbox}
+
+                        // type={type}
+                        label="Set true if you want to make private message"
+                        // id={`disabled-default-${type}`}
+                    />
+                </Form.Group>
+            {/*    <p>*/}
+            {/*    <label htmlFor="checkbox">Set true if you want to make private message</label>*/}
+            {/*        <input type="checkbox" id="checkbox" checked={x} onChange={soldCheckbox} />*/}
+            {/*        <span title="NEAR Tokens">Ⓝ</span>*/}
+            {/*</p>*/}
+                <Form.Group className="mb-3" controlId="receiver">
+                    <Form.Label>Receiver</Form.Label>
+                    <Form.Control
+                        placeholder="Enter receiver"
                         autoComplete="off"
-                        defaultValue={'0'}
-                        id="receiver"
-                        min="0"
-                        step="0.01"
-                        type="number"
+                        // id="receiver"
+                        type="text"
                         disabled={!x}
                     />
-                    <span title="NEAR Tokens">Ⓝ</span>
-                </p>
-                <button type="submit">
-                    Sign
-                </button>
+                </Form.Group>
+                {/*<p>*/}
+                {/*    <label htmlFor="receiver">Receiver (optional):</label>*/}
+                {/*    <input*/}
+                {/*        autoComplete="off"*/}
+                {/*        defaultValue={'0'}*/}
+                {/*        id="receiver"*/}
+                {/*        min="0"*/}
+                {/*        step="0.01"*/}
+                {/*        type="number"*/}
+                {/*        disabled={!x}*/}
+                {/*    />*/}
+                {/*</p>*/}
+                <Button variant="primary" type="submit" className="mb-3">
+                    Send message
+                </Button>
             </fieldset>
-        </form>
+        </Form>
     );
 }
 
-Form.propTypes = {
+MessageForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     currentUser: PropTypes.shape({
         accountId: PropTypes.string.isRequired,
         balance: PropTypes.string.isRequired
-    })
+    }),
+    onPrivateSubmit: PropTypes.func.isRequired
 };

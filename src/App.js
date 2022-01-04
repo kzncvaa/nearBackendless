@@ -2,12 +2,13 @@ import 'regenerator-runtime/runtime';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Big from 'big.js';
-import Form from './components/Form';
 import SignIn from './components/SignIn';
 import Messages from './components/Messages';
 import Backendless from 'backendless';
-import {addAuthUser, addMessage, gotMessages} from "./utils";
-
+import {addAuthUser, addMessage, gotMessages, gotPrivateMessages} from "./utils";
+import {Container, Button, Navbar} from 'react-bootstrap';
+import MessageForm from "./components/Form";
+import PrivateMessages from "./components/PrivateMessages";
 
 
 
@@ -22,11 +23,13 @@ const BOATLOAD_OF_GAS = Big(3).times(10 ** 13).toFixed();
 
 const App = ({ contract, currentUser, nearConfig, wallet }) => {
     const [messages, setMessages] = useState([]);
+    const [privateMessages, setPrivateMessages] = useState([]);
 
     useEffect(async () => {
         // contract.getMessages().then(setMessages);
         // console.log(a)
         setMessages(await gotMessages());
+        setPrivateMessages(await gotPrivateMessages(currentUser.accountId));
     }, []);
 
     const onSubmit = (e) => {
@@ -55,7 +58,7 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
     };
 
     const onPrivateSubmit = (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         //
         // const { fieldset, message, donation } = e.target.elements;
         //
@@ -75,7 +78,7 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
         //     });
         // });
         // // console.log(message.value);
-        // // console.log(donation.value);
+        console.log('aaa');
         // addMessage(currentUser, message.value, donation.value);
     };
 
@@ -94,24 +97,45 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
     };
 
     return (
-        <main>
-            {
-                currentUser && addAuthUser(currentUser)
-            }
-            <header>
-                <h1>NEAR Guest Book</h1>
-                { currentUser
-                    ? <button onClick={signOut}>Log out</button>
-                    : <button onClick={signIn}>Log in</button>
+        <>
+            <Navbar bg="dark" className="mb-3">
+                <Container>
+                    <Navbar.Brand>
+                        <h1 style={{color: "white"}}>NEAR Backendless Messenger</h1>
+                    </Navbar.Brand>
+                        {currentUser
+                            ?
+                            <Navbar.Brand style={{color: "white"}}>Sign as { currentUser.accountId }</Navbar.Brand>
+                            : <Navbar.Brand style={{color: "white"}}>Please sign in</Navbar.Brand>
+                        }
+                    <Navbar.Brand>
+                        { currentUser
+                            ? <Button variant="primary" onClick={signOut}>Log out</Button>
+                            : <Button variant="primary" onClick={signIn}>Log in</Button>
+                        }
+                    </Navbar.Brand>
+                </Container>
+            </Navbar>
+
+            <Container>
+                {
+                    currentUser && addAuthUser(currentUser)
                 }
-            </header>
-            { currentUser
-                ? <Form onSubmit={onSubmit} currentUser={currentUser} onPrivateSubmit={onPrivateSubmit} />
-                : <SignIn/>
-            }
-            {/*{ !!currentUser && !!messages.length && <Messages messages={messagesBackendless}/> }*/}
-            <Messages messages={messages}/>
-        </main>
+                <header>
+                </header>
+                { currentUser
+                    ? <MessageForm onSubmit={onSubmit} currentUser={currentUser} onPrivateSubmit={onPrivateSubmit} />
+                    : <SignIn/>
+                }
+                {/*{ !!currentUser && !!messages.length && <Messages messages={messagesBackendless}/> }*/}
+                {privateMessages.length>=1
+                    ? <PrivateMessages messages={privateMessages}/>
+                    :
+                    <div/>
+                }
+                <Messages messages={messages}/>
+            </Container>
+        </>
     );
 };
 
