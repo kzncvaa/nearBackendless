@@ -4,6 +4,7 @@ import App from './App';
 import getConfig from './config.js';
 import * as nearAPI from 'near-api-js';
 import {Buffer} from 'buffer';
+import {connect, KeyPair, keyStores, utils} from "near-api-js";
 
 if(window){
     window.Buffer = Buffer;
@@ -71,6 +72,26 @@ window.nearInitPromise = initContract().then(
         );
     }
 );
+
+export async function sendTransaction(currentUser, receiver, amount) {
+    const keyStore = new keyStores.BrowserLocalStorageKeyStore();
+    console.log(amount)
+    let item = 'near-api-js:keystore:' + currentUser.accountId + ':testnet';
+    let privateKey = localStorage.getItem(item);
+
+    const keyPair = KeyPair.fromString(privateKey);
+    await keyStore.setKey('testnet', currentUser.accountId, keyPair);
+    const nearConfig = getConfig(process.env.NODE_ENV || 'testnet');
+
+    const near = await connect({keyStore, ...nearConfig});
+    const amountParse = utils.format.parseNearAmount(amount);
+
+    const senderAccount = await near.account(currentUser.accountId);
+
+    const result = senderAccount.sendMoney(receiver, amountParse);
+    console.log(result)
+}
+
 
 
 

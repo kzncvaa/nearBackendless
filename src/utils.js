@@ -1,6 +1,9 @@
-// import { connect, Contract, keyStores, WalletConnection } from 'near-api-js'
+import {connect, Contract, KeyPair, keyStores, utils, WalletConnection} from 'near-api-js'
 // import {getConfig} from './config'
 import Backendless from "backendless";
+import {getConfig} from "@testing-library/react";
+// import getConfig from './config.js';
+
 // import Big from "big.js";
 // import {useState} from "react";
 //
@@ -76,8 +79,8 @@ import Backendless from "backendless";
 //     // window.walletConnection.requestSignIn("", "NEAR REST API")
 // }
 //
-export function addAuthUser(currentUser){
-    Backendless.Data.of('authedUsers').save({ account_id: currentUser.accountId , balance: currentUser.balance})
+export function addAuthUser(currentUser) {
+    Backendless.Data.of('authedUsers').save({account_id: currentUser.accountId, balance: currentUser.balance})
         .then(obj => {
             console.log(currentUser.accountId)
 
@@ -88,9 +91,10 @@ export function addAuthUser(currentUser){
             console.log(error);
         })
 }
+
 //
 export function addMessage(currentUser, message, payload) {
-    Backendless.Data.of('Messages').save({ account_id: currentUser.accountId, message: message, payload: payload})
+    Backendless.Data.of('Messages').save({account_id: currentUser.accountId, message: message, payload: payload})
         .then(obj => {
             // console.log(currentUser.accountId)
             //
@@ -101,8 +105,15 @@ export function addMessage(currentUser, message, payload) {
             console.log(error);
         })
 }
+
 export function addPrivateMessage(currentUser, message, payload, receiver) {
-    Backendless.Data.of('Messages').save({ account_id: currentUser.accountId, message: message, payload: payload, private: true, receiver: receiver})
+    Backendless.Data.of('Messages').save({
+        account_id: currentUser.accountId,
+        message: message,
+        payload: payload,
+        private: true,
+        receiver: receiver
+    })
         .then(obj => {
             // console.log(currentUser.accountId)
             //
@@ -113,28 +124,30 @@ export function addPrivateMessage(currentUser, message, payload, receiver) {
             console.log(error);
         })
 }
+
 //
 export const gotMessages = async () => {
     try {
         let whereClause = "private = false";
-        let queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause( whereClause );
+        let queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause(whereClause);
 
         let messages = await Backendless.Data.of('Messages').find(queryBuilder)
         // console.log(messages);
         return messages
-    }catch (e) {
+    } catch (e) {
         return e
     }
 }
 export const gotPrivateMessages = async (currentUser) => {
     try {
 
-        let whereClause = "receiver = '"+currentUser+"'";
-        let queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause( whereClause );
+        let whereClause = "receiver = '" + currentUser + "'";
+        let queryBuilder = Backendless.DataQueryBuilder.create().setWhereClause(whereClause);
         let messages = await Backendless.Data.of('Messages').find(queryBuilder)
         console.log(messages)
         return messages
-    }catch (e) {
+    } catch (e) {
         return e
     }
 }
+

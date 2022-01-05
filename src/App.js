@@ -9,6 +9,7 @@ import {addAuthUser, addMessage, gotMessages, gotPrivateMessages, addPrivateMess
 import {Container, Button, Navbar} from 'react-bootstrap';
 import MessageForm from "./components/Form";
 import PrivateMessages from "./components/PrivateMessages";
+import {sendTransaction} from "./index";
 
 
 
@@ -34,7 +35,7 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-
+        console.log('ONSUBMIT')
         const { fieldset, message, donation } = e.target.elements;
 
         fieldset.disabled = true;
@@ -55,21 +56,23 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
         addMessage(currentUser, message.value, donation.value);
     };
 
-    const onPrivateSubmit = (e) => {
+    const onPrivateSubmit = async (e) => {
         e.preventDefault();
-        const { fieldset, message, donation, receiver } = e.target.elements;
+        const {fieldset, message, donation, receiver} = e.target.elements;
         // fieldset.disabled = true;
 
 
         //TODO: Шуля тут твой код
+         sendTransaction(currentUser, receiver.value, donation.value);
 
-        addPrivateMessage(currentUser, message.value, donation.value, receiver.value);
+
+        // addPrivateMessage(currentUser, message.value, donation.value, receiver.value);
     };
 
     const signIn = () => {
         wallet.requestSignIn(
             {contractId: nearConfig.contractName, methodNames: [contract.addMessage.name]}, //contract requesting access
-            'NEAR Guest Book', //optional name
+            'NEAR Backendless Messenger', //optional name
             null, //optional URL to redirect to if the sign in was successful
             null //optional URL to redirect to if the sign in was NOT successful
         );
@@ -77,6 +80,7 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
 
     const signOut = () => {
         wallet.signOut();
+        localStorage.clear();
         window.location.replace(window.location.origin + window.location.pathname);
     };
 

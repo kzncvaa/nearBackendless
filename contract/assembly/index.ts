@@ -12,6 +12,7 @@
  *
  */
 
+// @ts-ignore
 import { Context, logging, storage } from 'near-sdk-as'
 
 const DEFAULT_MESSAGE = 'Hello'
