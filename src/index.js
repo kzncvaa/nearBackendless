@@ -75,12 +75,12 @@ window.nearInitPromise = initContract().then(
 
 export async function sendTransaction(currentUser, receiver, amount) {
     const keyStore = new keyStores.BrowserLocalStorageKeyStore();
-    console.log(amount)
-    let item = 'near-api-js:keystore:' + currentUser.accountId + ':testnet';
-    let privateKey = localStorage.getItem(item);
-
-    const keyPair = KeyPair.fromString(privateKey);
-    await keyStore.setKey('testnet', currentUser.accountId, keyPair);
+    // console.log(amount)
+    // // let item = 'near-api-js:keystore:' + currentUser.accountId + ':testnet';
+    // // let privateKey = "ed25519:2F9Ep1qiitKgQ5qvD3NE9s2XGaRtbrRVWof9xu8wHj31pTsdPN1f24FTAV5ocXfCPbCWuGzEr9iNFr2WiGbUVRL4";
+    // //
+    // // const keyPair = KeyPair.fromString(privateKey);
+    // // await keyStore.setKey('testnet', currentUser.accountId, keyPair);
     const nearConfig = getConfig(process.env.NODE_ENV || 'testnet');
 
     const near = await connect({keyStore, ...nearConfig});
